@@ -154,10 +154,3 @@ Token& Token::operator= (const Token& otherToken) {
 void Token::increase (void) {
 	ammount_++;
 }
-
-/**
- * @brief      Prints a token.
- */
-void Token::printToken (void) const {
-	std::cout << std::endl << "Token Info:" << std::endl << "\t - Name: " << get_Name() << std::endl << "\t - Ammount: " << get_Ammount() << std::endl;
-}

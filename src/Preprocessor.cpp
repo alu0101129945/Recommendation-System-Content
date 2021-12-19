@@ -64,9 +64,8 @@ void Preprocessor::generateWords (void) {
 	unsigned counter = 0;
 	std::string tmp = "";
 	while (counter < string_.length()) {
-		if (string_[counter] != ' ' and string_[counter] != '\n') {
+		if (string_[counter] != ' ' and string_[counter] != '\n')
 			tmp += string_[counter];
-		}
 		else {
 			std::string newWord = preprocessor(tmp);	
 			int pos = hasToken(newWord);
@@ -94,20 +93,10 @@ std::string Preprocessor::preprocessor (std::string str) {
 	std::transform(str.begin(), str.end(),str.begin(), ::tolower);
 	std::string result = "";
 	for (unsigned i = 0; i < str.length(); i++) {
-		if (str[i] != '.' and str[i] != ',' and str[i] != '-' and str[i] != '\'' and str[i] != '%' and str[i] != ';' and str[i] != ':') {
+		if (str[i] != '.' and str[i] != ',' and str[i] != '-' and str[i] != '\'' and str[i] != '%' and str[i] != ';' and str[i] != ':') 
 			result += str[i];
-		}
 	}
 	return result;
-}
-
-/**
- * @brief      Prints the vector
- */
-void Preprocessor::printVector (void) {
-	for (unsigned i = 0; i < vector_.size(); i++) {
-		vector_[i].printToken();
-	}
 }
 
 /**
@@ -119,9 +108,8 @@ void Preprocessor::printVector (void) {
  */
 int Preprocessor::hasToken (std::string str) {
 	for (unsigned i = 0; i < vector_.size(); i++) {
-		if (vector_[i].get_Name() == str) {
+		if (vector_[i].get_Name() == str)
 			return i;
-		}
 	}
 	return -1;
 }

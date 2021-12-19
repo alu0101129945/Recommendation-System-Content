@@ -65,10 +65,10 @@ void Recomendation::generateTables (void) {
  */
 void Recomendation::printTables (void) {
 	for (unsigned art = 0; art < articles_.size(); art++) {
-		std::cout << "\n\n\n\n\nTabla Artículo " << art << ":\n\tIndice\tTermino\t\tTF\t\tIDF\t\tTF-IDF\t\tValorNormalizado";
+		std::cout << "\n\n\n\nTabla Artículo " << art << ":\nIndice\tTérmino\t\tTF\t\tIDF\t\tTF-IDF\t\tValor Normalizado";
 		for (unsigned i = 0; i < articles_[art].get_Token().size(); i++) {
 			std::cout << std::endl;
-			std::cout << "\t" << i;
+			std::cout << i;
 			std::cout << "\t" << articles_[art].get_Token()[i].get_Name();
 			if (articles_[art].get_Token()[i].get_Name().length() < 8) {
 				std::cout << "\t";
@@ -78,7 +78,6 @@ void Recomendation::printTables (void) {
 			std::cout << "\t\t" << std::setprecision(4) << articles_[art].get_Token()[i].get_Tf_Idf();
 			std::cout << "\t\t" << std::setprecision(4) << articles_[art].get_Token()[i].get_NormalizedValue();
 		}
-		std::cout << std::endl << "Longitud del vector: " << articles_[art].get_VectorSize();
 	}
 }
 
@@ -106,10 +105,10 @@ void Recomendation::calculateCosines (void) {
 
 void Recomendation::printTableCosine (void) {
 	for (unsigned i = 0; i < articles_.size(); i++) {
+		std::cout << std::endl << std::endl << "Similaridad del artículo: " << i;
 		for (unsigned j = 0; j < articles_.size(); j++) {
-			if (i != j) {
+			if (i != j)
 				std::cout << "\ncos(" << i << ", " << j << ") = " << articles_[i].get_Cosines()[j];
-			}
 		}
 	}
 }

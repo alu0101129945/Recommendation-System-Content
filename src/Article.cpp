@@ -106,9 +106,8 @@ void Article::generateTokens (void) {
  */
 bool Article::containsWord (std::string str) {
     for (unsigned i = 0; i < token_.size(); i++) {
-        if (token_[i].get_Name() == str) {
+        if (token_[i].get_Name() == str)
             return true;
-        }
     }
     return false;
 }

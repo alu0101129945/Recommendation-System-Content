@@ -61,9 +61,8 @@ void Preprocessor::generateWords (void) {
 	unsigned counter = 0;
 	std::string tmp = "";
 	while (counter < string_.length()) {
-		if (string_[counter] != ' ' and string_[counter] != '\n') {
+		if (string_[counter] != ' ' and string_[counter] != '\n')
 			tmp += string_[counter];
-		}
 		else {
 			std::string newWord = preprocessor(tmp);	
 			int pos = hasToken(newWord);
@@ -87,9 +86,8 @@ std::string Preprocessor::preprocessor (std::string str) {
 	std::transform(str.begin(), str.end(),str.begin(), ::tolower);
 	std::string result = "";
 	for (unsigned i = 0; i < str.length(); i++) {
-		if (str[i] != '.' and str[i] != ',' and str[i] != '-' and str[i] != '\'' and str[i] != '%' and str[i] != ';' and str[i] != ':') {
+		if (str[i] != '.' and str[i] != ',' and str[i] != '-' and str[i] != '\'' and str[i] != '%' and str[i] != ';' and str[i] != ':')
 			result += str[i];
-		}
 	}
 	return result;
 }
@@ -99,9 +97,8 @@ std::string Preprocessor::preprocessor (std::string str) {
 ~~~
 int Preprocessor::hasToken (std::string str) {
 	for (unsigned i = 0; i < vector_.size(); i++) {
-		if (vector_[i].get_Name() == str) {
+		if (vector_[i].get_Name() == str)
 			return i;
-		}
 	}
 	return -1;
 }
@@ -132,12 +129,11 @@ void Recomendation::generateTables (void) {
 - ContainsWord.
 ~~~
 bool Article::containsWord (std::string str) {
-    for (unsigned i = 0; i < token_.size(); i++) {
-        if (token_[i].get_Name() == str) {
-            return true;
-        }
-    }
-    return false;
+  for (unsigned i = 0; i < token_.size(); i++) {
+    if (token_[i].get_Name() == str)
+      return true;
+  }
+  return false;
 }
 ~~~
 
@@ -146,19 +142,19 @@ Acto seguido, se calcula el IDF y TF-IDF. Mediante el método "generateItemMetri
 - GenerateItemMetrics.
 ~~~
 void Article::generateItemMetrics (unsigned i, unsigned N, unsigned dfx) {
-    token_[i].set_Idf(N, dfx);
-    token_[i].set_Tf_Idf();
+  token_[i].set_Idf(N, dfx);
+  token_[i].set_Tf_Idf();
 }
 ~~~
 
 - Set_Idf.
 Sigue la siguiente fórmula: 
 
-![Imagen del IDF]()
+![Imagen del IDF](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/idf.png)
 
 ~~~
 void Token::set_Idf (unsigned N, unsigned dfx) {
-    idf_ = std::log10(N / dfx);
+  idf_ = std::log10(N / dfx);
 }
 ~~~
 
@@ -166,11 +162,11 @@ void Token::set_Idf (unsigned N, unsigned dfx) {
 Ammount es la cantidad de veces (frecuencia) que aparece la palabra en el documento.
 Sigue la siguiente fórmula:
 
-![Imagen del TF-IDF]()
+![Imagen del TF-IDF](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/TF-IDF.png)
 
 ~~~
 void Token::set_Tf_Idf (void) {
-    tf_idf_ = ammount_ * idf_;
+  tf_idf_ = ammount_ * idf_;
 }
 ~~~
 
@@ -183,11 +179,11 @@ A continuación, se comienza a realizar el proceso de normalización del vector 
 - GenerateVectorSize.
 ~~~
 void Article::generateVectorSize (void) {
-    vectorSize_ = 0.0;
-    for (unsigned i = 0; i < token_.size(); i++) {
-        vectorSize_ += (token_[i].get_Tf_Idf() * token_[i].get_Tf_Idf());
-    }
-    vectorSize_ = std::sqrt(vectorSize_);
+  vectorSize_ = 0.0;
+  for (unsigned i = 0; i < token_.size(); i++) {
+    vectorSize_ += (token_[i].get_Tf_Idf() * token_[i].get_Tf_Idf());
+  }
+  vectorSize_ = std::sqrt(vectorSize_);
 }
 ~~~
 
@@ -196,9 +192,9 @@ Luego, cada vector de términos es dividido por la longitud del vector del docum
 - GenerateNormalizedValue.
 ~~~
 void Article::generateNormalizedValue (void) {
-    for (unsigned i = 0; i < token_.size(); i++) {
-        token_[i].set_NormalizedValue(token_[i].get_Tf_Idf() / get_VectorSize());
-    }
+  for (unsigned i = 0; i < token_.size(); i++) {
+    token_[i].set_NormalizedValue(token_[i].get_Tf_Idf() / get_VectorSize());
+  }
 }
 ~~~
 
@@ -233,3 +229,5 @@ void Recomendation::calculateCosines (void) {
 Finalmente, se muestran todos los resultados por pantalla tal y como se pide en el guión de la práctica como se podrá observar en el siguiente apartado del informe. 
 
 ### 4. Ejemplo de uso. 
+Para ejecutar el programa, se debe colocar en la carpeta build, donde se encuentra el makefile para automatizar esta tarea. Una vez situado en ella, ejecutar make run.
+
