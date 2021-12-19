@@ -83,7 +83,7 @@ void Recomendation::printTables (void) {
 }
 
 /**
- * @brief      Calcula los cosenos
+ * @brief      Calculate the cosines
  */
 void Recomendation::calculateCosines (void) {
 	for (unsigned i = 0; i < articles_.size(); i++) {

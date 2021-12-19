@@ -46,7 +46,5 @@ class Token {
 
 		// Function
 		void increase (void);
-		
-		// Write
 		void printToken (void) const;
 };
