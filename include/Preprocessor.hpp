@@ -31,5 +31,4 @@ class Preprocessor {
 		std::string preprocessor (std::string str);
 		void printVector (void);
 		int hasToken (std::string str);
-
 };

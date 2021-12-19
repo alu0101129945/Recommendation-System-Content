@@ -20,7 +20,6 @@ class Recomendation {
 
 		// Functions
 		void generateArticles (void);
-		void runProgram (void);
 		void generateTables (void);
 		void printTables (void);
 		void calculateTableCosine (void);

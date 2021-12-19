@@ -13,6 +13,9 @@ Recomendation::Recomendation (void) {}
 Recomendation::Recomendation (std::string inputFile) {
 	fileName_ = inputFile;
 	generateArticles();
+	generateTables();
+	printTables();
+	printTableCosine();
 }
 
 /**
@@ -38,31 +41,18 @@ void Recomendation::generateArticles (void) {
 }
 
 /**
- * @brief      Runs and executes the program
- */
-void Recomendation::runProgram (void) {
-	generateTables();
-	printTables();
-	printTableCosine();
-}
-
-/**
  * @brief      Generates the tables for each article
  */
 void Recomendation::generateTables (void) {
-	unsigned N = articles_.size();
-	for (unsigned art = 0; art < N; art++) {
+	for (unsigned art = 0; art < articles_.size(); art++) {
 		for (unsigned i = 0; i < articles_[art].get_Token().size(); i++) {
 			unsigned dfx = 0;
 			std::string word = articles_[art].get_Token()[i].get_Name();
-			for (unsigned j = 0; j < N; j++) {
-				if (articles_[j].containsWord(word)) {
+			for (unsigned j = 0; j < articles_.size(); j++) {
+				if (articles_[j].containsWord(word))
 					dfx++;
-				}
 			}
-
-			articles_[art].generateItemMetrics(i, N, dfx);
-
+			articles_[art].generateItemMetrics(i, articles_.size(), dfx);
 		}
 		articles_[art].generateVectorSize();
 		articles_[art].generateNormalizedValue();
