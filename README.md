@@ -51,7 +51,7 @@ void Article::generateTokens (void) {
 
 A continuación, se generan las palabras. Para realizar esto se utilizan tres métodos de la clase "Preprocessor" bien diferenciados. Antes de su explicación se puede observar a continuación una imagen de la misma.
 
-![Imagen de la clase Preprocessor.hpp](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/ClasePreprocessor.png)
+![Imagen de la clase Preprocessor.hpp](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/ClasePreprocesso.png)
 
 En primer lugar, "generateWords". Este se encarga de saltarse los espacios en blanco y los saltos de líneas, y llama a su vez a los siguientes métodos cuando tiene almacenada la palabra completa. En segundo lugar, "preprocessor", convierte a minúscula toda la palabra y les quita todos los signos de puntuación que no se necesitan almacenar en el string que retorna como resultado. Una vez se tienen las palabras como se quieren, se comprueba si cada una se encuentra en el vector de tokens (atributo de la clase Preprocessor). En caso de que no esté, crea un nuevo Token y mete en dicho vector la nueva palabra creada. En caso contrario, no la inserta pero incrementa el TF de esa palabra (método de la clase Token que incrementa el número de veces que aparece la palabra en el documento, es decir, guarda en el atributo ammount su frecuencia). Por último, utiliza "hasToken" que comprueba si el nombre de esa palabra ya está almacenada en el vector final y retorna la posición en la que se encuentra en el vector (en caso de que no esté retorna -1). Se puede observar a continuación el código de los tres métodos. 
 
