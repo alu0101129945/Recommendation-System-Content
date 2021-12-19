@@ -231,3 +231,10 @@ Finalmente, se muestran todos los resultados por pantalla tal y como se pide en 
 ### 4. Ejemplo de uso. 
 Para ejecutar el programa, se debe colocar en la carpeta build, donde se encuentra el makefile para automatizar esta tarea. Una vez situado en ella, ejecutar make run.
 
+En primer lugar, se ha cogido de ejemplo el documento "Documents-01.txt" aportado por el profesorado de la asignatura. Como resultado, se obtienen las tablas de cada uno de los artículos contenidos en el documento que se pasa por parámetro en la ejecución del programa (make run automatiza la ejecución del mismo). En ellas se muestra el índice del término, el nombre del mismo, el TF, IDF, TF-IDF y por último, el valor normalizado.
+
+![Tablas]()
+
+Y por último, se muestra la similaridad entre cada par de artículos contenidos en cada documento. 
+
+![Similaridad]()
