@@ -18,13 +18,42 @@ En primer lugar, se ha decidido modular el código en cuatro clases diferenciabl
 
 ![Imagen de la clase Recomendation.hpp](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/ClaseRecomendation.png)
 
-He decidido explicar el código desarrollado siguiendo el algoritmo ya que considero es la mejor manera de entenderlo. Por tanto, se comienza generando los artículos. Para ello, abre el fichero pasado como argumento, lee línea por línea del documento y crea su respectivo artículo con cada una de ellas almacenándolos en el atributo detallado anteriormente (vector de artículos). Además, genera los token de cada uno. Esto se realiza llamando al método de la clase Artículo denominado "generateTokens". En este, se crea un objeto de tipo Preprocessor al cual se le pasa al constructor de esa clase la línea que se está analizando. 
+He decidido explicar el código desarrollado siguiendo el algoritmo ya que considero es la mejor manera de entenderlo. Por tanto, se comienza generando los artículos con el método "generateArticles". Para ello, abre el fichero pasado como argumento, lee línea por línea del documento y crea su respectivo artículo con cada una de ellas almacenándolos en el atributo detallado anteriormente (vector de artículos). Además, genera los tokens de cada uno. Esto se realiza llamando al método de la clase Artículo denominado "generateTokens". En este, se crea un objeto de tipo Preprocessor al cual se le pasa al constructor de esa clase la línea que se está analizando. 
+
+- GenerateArticles.
+~~~
+void Recomendation::generateArticles (void) {
+	std::ifstream file(fileName_, std::ios::in);
+	if (file.fail()) {
+		std::cout << std::endl << "Error 404, file not found." << std::endl;
+		exit(1);
+	}
+	while (!file.eof()) {
+		std::string line = "";
+		std::getline(file, line);
+		Article newArticle;
+		newArticle.set_Line(line);
+		newArticle.generateTokens();
+		articles_.push_back(newArticle);
+	}
+	file.close();
+}
+~~~
+
+- GenerateTokens.
+~~~
+void Article::generateTokens (void) {
+	Preprocessor newPreprocessor(line_);
+	newPreprocessor.generateWords();
+	token_ = newPreprocessor.get_Vector();
+}
+~~~
 
 A continuación, se generan las palabras. Para realizar esto se utilizan tres métodos de la clase "Preprocessor" bien diferenciados. Antes de su explicación se puede observar a continuación una imagen de la misma.
 
 ![Imagen de la clase Preprocessor.hpp](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/ClasePreprocessor.png)
 
-En primer lugar, "generateWords". Este se encarga de saltarse los espacios en blanco y los saltos de líneas, y llama a su vez a los siguientes métodos cuando tiene almacenada la palabra completa. En segundo lugar, "preprocessor", convierte a minúscula toda la palabra y les quita todos los signos de puntuación que no se necesitan almacenar en el string que retorna como resultado. Una vez se tienen las palabras como se quieren, se comprueba si cada una se encuentra en el vector de tokens (atributo de la clase Preprocessor), en caso de que no lo esté, crea un nuevo Token y mete en dicho vector la nueva palabra creada. En caso contrario, no la mete pero incrementa el TF de esa palabra (método de la clase Token que incrementa el número de veces que aparece la palabra en el documento, es decir, guarda en el atributo ammount su frecuencia). Por último, utiliza "hasToken" que comprueba si el nombre de esa palabra ya está almacenada en el vector final y retorna la posición en la que se encuentra en el vector (en caso de que no esté retorna -1). Se puede observar a continuación el código de los tres métodos. 
+En primer lugar, "generateWords". Este se encarga de saltarse los espacios en blanco y los saltos de líneas, y llama a su vez a los siguientes métodos cuando tiene almacenada la palabra completa. En segundo lugar, "preprocessor", convierte a minúscula toda la palabra y les quita todos los signos de puntuación que no se necesitan almacenar en el string que retorna como resultado. Una vez se tienen las palabras como se quieren, se comprueba si cada una se encuentra en el vector de tokens (atributo de la clase Preprocessor). En caso de que no esté, crea un nuevo Token y mete en dicho vector la nueva palabra creada. En caso contrario, no la inserta pero incrementa el TF de esa palabra (método de la clase Token que incrementa el número de veces que aparece la palabra en el documento, es decir, guarda en el atributo ammount su frecuencia). Por último, utiliza "hasToken" que comprueba si el nombre de esa palabra ya está almacenada en el vector final y retorna la posición en la que se encuentra en el vector (en caso de que no esté retorna -1). Se puede observar a continuación el código de los tres métodos. 
 
 1. GenerateWords.
 ~~~
@@ -80,6 +109,26 @@ int Preprocessor::hasToken (std::string str) {
 
 Por otro lado, se generan las tablas. Este método se encarga de recorrer cada artículo y calcular con cada palabra el número de documentos en N (articles_.size()) en los que dicha palabra aparece, esto es, dfx. Para ello utiliza un método de la clase Article denominado "containsWord" que devuelve un booleano (true en caso de que coincida el nombre de alguna palabra del vector de tokens con la que está analizando en ese momento). 
 
+- GenerateTables.
+~~~
+void Recomendation::generateTables (void) {
+	for (unsigned art = 0; art < articles_.size(); art++) {
+		for (unsigned i = 0; i < articles_[art].get_Token().size(); i++) {
+			unsigned dfx = 0;
+			std::string word = articles_[art].get_Token()[i].get_Name();
+			for (unsigned j = 0; j < articles_.size(); j++) {
+				if (articles_[j].containsWord(word))
+					dfx++;
+			}
+			articles_[art].generateItemMetrics(i, articles_.size(), dfx);
+		}
+		articles_[art].generateVectorSize();
+		articles_[art].generateNormalizedValue();
+	}
+	calculateCosines();
+}
+~~~
+
 - ContainsWord.
 ~~~
 bool Article::containsWord (std::string str) {
@@ -103,6 +152,10 @@ void Article::generateItemMetrics (unsigned i, unsigned N, unsigned dfx) {
 ~~~
 
 - Set_Idf.
+Sigue la siguiente fórmula: 
+
+![Imagen del IDF]()
+
 ~~~
 void Token::set_Idf (unsigned N, unsigned dfx) {
     idf_ = std::log10(N / dfx);
@@ -111,6 +164,10 @@ void Token::set_Idf (unsigned N, unsigned dfx) {
 
 - Set_Tf-Idf.
 Ammount es la cantidad de veces (frecuencia) que aparece la palabra en el documento.
+Sigue la siguiente fórmula:
+
+![Imagen del TF-IDF]()
+
 ~~~
 void Token::set_Tf_Idf (void) {
     tf_idf_ = ammount_ * idf_;
@@ -119,7 +176,7 @@ void Token::set_Tf_Idf (void) {
 
 La clase Token por tanto queda reflejada de la siguiente manera. 
 
-![Imagen de la clase Token]()
+![Imagen de la clase Token](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/ClaseToken.png)
 
 A continuación, se comienza a realizar el proceso de normalización del vector con el método "generateVectorSize". Para ello, se calcula la longitud del mismo como la raíz cuadrada de la suma de los valores al cuadrado de cada TF-IDF en el vector. 
 
@@ -145,11 +202,11 @@ void Article::generateNormalizedValue (void) {
 }
 ~~~
 
-De esta manera, queda explicada los métodos más relevantes de la clase Article. 
+De esta manera, quedan explicados los métodos más relevantes de la clase Article. 
 
-![Imagen de la clase Article.hpp]()
+![Imagen de la clase Article.hpp](https://github.com/alu0101129945/Recommendation-System-Content/blob/master/image/ClaseArticle.png)
 
-Una vez obtenidos los vectores normalizados, se calculan los valores del coseno para averiguar la similaridad entre los artículos. Para ello, mediante el método denominado "calculateCosines", simplemente se suma el producto de los vectores de ambos artículos, es decir, en el primer bucle i se recorre el vector de artículos, acto seguido,se recorre con j el mismo vector para evitar que se realicen los cálculos con el mismo artículo, entonces, cuando no coincidan i y j, se recorre el vector de tokens de cada uno de los artículos para realizar la similaridad con aquellos tokens que coincidan en ambos. Por último, se añade el resultado en el vector de float denominado cosine_ en la clase Article. 
+Una vez obtenidos los vectores normalizados, se calculan los valores del coseno para averiguar la similaridad entre los artículos. Para ello, mediante el método denominado "calculateCosines", simplemente se suma el producto de los vectores de ambos artículos, es decir, en el primer bucle i se recorre el vector de artículos, acto seguido, se recorre con j el mismo vector para evitar que se realicen los cálculos con el mismo artículo, entonces, cuando no coincidan i y j, se recorre el vector de tokens de cada uno de los artículos para realizar la similaridad con aquellos tokens que coincidan en ambos. Por último, se añade el resultado en el vector de float denominado cosine_ en la clase Article. 
 
 - CalculateCosines.
 ~~~
